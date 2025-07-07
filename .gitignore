@@ -1,13 +1,12 @@
 # Python
-backend/.env
 __pycache__/
 *.pyc
+backend/.env
 
 # Node
 frontend-1/node_modules/
-frontend-1/dist/
 frontend-1/.env
+frontend-1/dist/
 
 # System
 .DS_Store
-*.log
