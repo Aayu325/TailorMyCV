@@ -22,7 +22,7 @@ const Matcher = ({ onEditorTextChange }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/match/", formData);
+      const response = await axios.post("https://tailormycv-1.onrender.com/match/", formData);
       if (response.data.error) {
         alert("❌ " + response.data.error);
         setResult(null);

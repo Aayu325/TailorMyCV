@@ -15,7 +15,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",  # React default
         "http://localhost:5173",  # Vite default
-        "http://localhost:5174"   # Your current port
+        "http://localhost:5174",
+        'https://tailor-my-cv-xtkw.vercel.app/'   # Your current port
     ],
     allow_credentials=True,
     allow_methods=["*"],

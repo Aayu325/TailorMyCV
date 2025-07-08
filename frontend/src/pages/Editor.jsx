@@ -22,7 +22,7 @@ const Editor = ({ editorText, setEditorText }) => {
     formData.append("resume", docxFile);
 
     try {
-      const response = await axios.post("http://localhost:8000/upload-docx/", formData);
+      const response = await axios.post("https://tailormycv-1.onrender.com/upload-docx/", formData);
       if (response.data.html) {
         setEditorText(response.data.html);
       } else {
