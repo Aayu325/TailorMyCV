@@ -12,12 +12,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # React default
-        "http://localhost:5173",  # Vite default
-        "http://localhost:5174",
-        'https://tailor-my-cv-xtkw.vercel.app/'   # Your current port
-    ],
+    allow_origins=["https://tailor-my-cv-xtkw.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
