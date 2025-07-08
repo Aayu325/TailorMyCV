@@ -66,7 +66,7 @@ const Matcher = ({ onEditorTextChange }) => {
       <button
         onClick={handleUpload}
         disabled={loading}
-        className={`w-full py-3 text-lg font-semibold rounded-md transition duration-300 ${
+        className={`w-full py-3 text-lg font-semibold rounded-md transition duration-300 bg-gray-900 ${
           loading
             ? "bg-gray-600 text-white cursor-not-allowed"
             : "bg-blue-600 text-white hover:bg-blue-700"

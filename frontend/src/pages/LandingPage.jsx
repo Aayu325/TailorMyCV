@@ -11,7 +11,7 @@ const LandingPage = () => {
       <section className="py-20 bg-[#1a1a1a] border-b border-gray-800 shadow-inner">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-white">
-            🎯 Boost Your Chances of Getting Hired
+            Boost Your Chances of Getting Hired
           </h1>
           <p className="text-xl text-gray-400 mb-10">
             Match your resume to job descriptions using AI in seconds.
@@ -20,7 +20,7 @@ const LandingPage = () => {
             href="/Resume-Match"
             className="inline-block bg-blue-600 text-white text-lg px-8 py-4 rounded-lg shadow hover:bg-blue-700 transition"
           >
-            🚀 Get Started
+            <span className="text-white">🚀 Get Started</span>
           </a>
         </div>
       </section>
@@ -92,7 +92,7 @@ const LandingPage = () => {
           href="/Resume-Match"
           className="bg-blue-600 text-white font-bold px-8 py-3 rounded hover:bg-blue-700 transition"
         >
-          Try It Now
+          <span className="text-white">Try It Now</span>
         </a>
       </section>
 
