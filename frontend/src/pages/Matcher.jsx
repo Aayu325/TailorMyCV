@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Matcher = ({ onEditorTextChange }) => {
   const [resumeFile, setResumeFile] = useState(null);
@@ -21,6 +22,8 @@ const Matcher = ({ onEditorTextChange }) => {
     formData.append("jd_text", jdText);
 
     setLoading(true);
+    setResult(null);
+
     try {
       const response = await axios.post("https://tailormycv-1.onrender.com/match/", formData);
       if (response.data.error) {
@@ -39,68 +42,112 @@ const Matcher = ({ onEditorTextChange }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-[#1a1a1a] text-white rounded-2xl shadow-xl space-y-6 border border-gray-800 mt-10">
-      <h2 className="text-3xl font-extrabold text-center text-blue-400">📄 AI Resume Matcher</h2>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Upload Resume (PDF):</label>
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={(e) => setResumeFile(e.target.files[0])}
-          className="w-full rounded-md border border-gray-700 bg-[#121212] p-2 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+    <div className="max-w-4xl mx-auto mt-16 px-6">
+      {/* Header */}
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-extrabold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text mb-2">
+          🧠 Resume Matcher AI
+        </h2>
+        <p className="text-gray-400 text-md">
+          Upload your resume, paste the job description, and let AI handle the matching.
+        </p>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Paste Job Description:</label>
-        <textarea
-          rows={6}
-          value={jdText}
-          onChange={(e) => setJdText(e.target.value)}
-          placeholder="Paste the job description here..."
-          className="w-full rounded-md border border-gray-700 bg-[#121212] p-3 text-white shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      {/* Form */}
+      <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6">
+        {/* Upload */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-300 mb-1">
+            📎 Upload Resume (PDF only)
+          </label>
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={(e) => setResumeFile(e.target.files[0])}
+            className="w-full file:bg-blue-600 file:text-white file:font-semibold file:px-4 file:py-2 file:rounded-md file:border-0 file:mr-4 bg-[#121212] text-gray-300 border border-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* JD */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-300 mb-1">
+            📋 Paste Job Description
+          </label>
+          <textarea
+            rows={6}
+            value={jdText}
+            onChange={(e) => setJdText(e.target.value)}
+            placeholder="Paste the job description here..."
+            className="w-full bg-[#121212] text-gray-200 border border-gray-700 rounded-md p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Analyze Button */}
+        <button
+          onClick={handleUpload}
+          disabled={loading}
+          className={`w-full py-3 text-lg font-semibold rounded-md transition duration-300 ${
+            loading
+              ? "bg-gray-600 text-white cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700 text-white"
+          }`}
+        >
+          {loading ? "⏳ Processing..." : "🔍 Analyze Match"}
+        </button>
+
+        {/* Progress Bar */}
+        {loading && (
+          <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden mt-2">
+            <motion.div
+              className="bg-blue-500 h-full"
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+        )}
       </div>
 
-      <button
-        onClick={handleUpload}
-        disabled={loading}
-        className={`w-full py-3 text-lg font-semibold rounded-md transition duration-300 bg-gray-900 ${
-          loading
-            ? "bg-gray-600 text-white cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-700"
-        }`}
-      >
-        {loading ? "⏳ Processing..." : "🔍 Analyze Match"}
-      </button>
+      {/* Animated Result */}
+      <AnimatePresence>
+        {result && !loading && (
+          <motion.div
+            className="mt-10 bg-[#111111] border border-gray-700 rounded-2xl p-6 shadow-lg space-y-5"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+              ✅ Match Results
+            </h3>
 
-      {result && (
-        <div className="mt-6 bg-[#111111] border border-gray-700 rounded-xl p-5 shadow-inner space-y-4">
-          <h3 className="text-xl font-semibold text-white">🧠 AI Match Results</h3>
-          <p>
-            <strong className="text-blue-400">✅ Match Score:</strong>{" "}
-            <span className="text-white">{result.match_score ?? "N/A"} / 100</span>
-          </p>
-          <p>
-            <strong className="text-blue-400">🔍 Missing Keywords:</strong>{" "}
-            <span className="text-white">{result.missing_keywords?.join(", ") || "None"}</span>
-          </p>
-          <p>
-            <strong className="text-blue-400">💡 Suggestions:</strong>{" "}
-            <span className="text-white">{result.suggestions || "None"}</span>
-          </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="text-sm text-gray-300">
+                <span className="block font-semibold text-blue-400">Match Score:</span>
+                <span className="text-white text-lg">{result.match_score ?? "N/A"} / 100</span>
+              </div>
 
-          <div className="pt-4">
+              <div className="text-sm text-gray-300">
+                <span className="block font-semibold text-blue-400">Missing Keywords:</span>
+                <span className="text-white">{result.missing_keywords?.join(", ") || "None"}</span>
+              </div>
+            </div>
+
+            <div className="text-sm text-gray-300">
+              <span className="block font-semibold text-blue-400">Suggestions:</span>
+              <span className="text-white">{result.suggestions || "None"}</span>
+            </div>
+
             <button
               onClick={() => navigate("/Resume-Edit")}
-              className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition duration-300"
+              className="w-full mt-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition duration-300"
             >
-              ✏️ Edit Your Resume
+              ✏️ Edit Resume Instantly
             </button>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
